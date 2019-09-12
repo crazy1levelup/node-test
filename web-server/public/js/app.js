@@ -1,8 +1,5 @@
 //client side javascript
 
-   
-
-
 const weatherForm = document.querySelector('form');
 const searchElement = document.querySelector('input');
 const message = document.querySelector('.message');
