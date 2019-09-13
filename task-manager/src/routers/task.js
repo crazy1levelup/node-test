@@ -41,12 +41,23 @@ router.get('/tasks/:id', async (req, res) => {
 });
 
 router.patch('/tasks/:id', async (req, res) => {
-
     const _id = req.params.id;
     const body = req.body;
+    const updates = Object.keys(body);
+    const allowedUpdates = ['description', 'completed']
+    const isValid = updates.every((update) => allowedUpdates.includes(update))
+
+    if(!isValid) {
+        return res.status(400).send("Invalid updates")
+    }
 
     try {
-        const task = await Task.findByIdAndUpdate(_id, body, { new: true, runValidators: true });
+        const task = await Task.findById(_id);
+        updates.forEach((update) => task[update] = body[update])
+        
+        await task.save();
+        // const task = await Task.findByIdAndUpdate(_id, body, { new: true, runValidators: true });
+
         if (!task) {
             return res.status(404).send("Not found")
         }
